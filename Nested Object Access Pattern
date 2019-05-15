@@ -1,0 +1,23 @@
+Oliver Steele’s pattern works based on short circuit assignment. I have written another post on how short-circuit assignment works — https://dev.to/flexdinesh/short-circuit-assignment-in-javascript--4k80
+
+So basically, the line
+
+const name = ((user || {}).personalInfo || {}).name;
+
+works as follows
+
+const user = user ? user : {};
+const personalInfo = user.personalInfo ? user.personalInfo : {};
+const name = personalInfo.name;
+// never run into the problem of accessing object from undefined
+On the other hand, this line
+
+const name = ((user || {}).personalInfo || user).name;
+would work as
+
+const user = user ? user : {};
+const personalInfo = user.personalInfo ? user.personalInfo : user;
+// now when user.personalInfo is null/undefined then
+// user reference will be assigned to personalInfo
+// so the next line would mean user.name
+const name = personalInfo.name;
